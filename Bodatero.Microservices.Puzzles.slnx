@@ -4,6 +4,9 @@
     <Project Path="Ordering.Api/Ordering.Api.csproj" />
     <Project Path="Ordering.Contracts/Ordering.Contracts.csproj" />
   </Folder>
+  <Folder Name="/modules/payments/">
+    <Project Path="Payments.Api/Payments.Api.csproj" Id="22647db0-f19c-406a-bfec-b3b98eaaf7e1" />
+  </Folder>
   <Folder Name="/modules/stock/">
     <Project Path="Stock.Api/Stock.Api.csproj" />
   </Folder>

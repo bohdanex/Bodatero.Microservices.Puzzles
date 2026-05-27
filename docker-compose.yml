@@ -11,8 +11,6 @@ services:
         condition: service_started
       rabbitmq:
         condition: service_healthy
-      seq:
-        condition: service_started
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - Serilog__WriteTo__1__Args__Endpoint=http://seq:5341/ingest/otlp/v1/logs
@@ -21,6 +19,27 @@ services:
       - MT_LICENSE=Community
     ports:
       - "6582:8080"
+
+  payments-api:
+    image: ${DOCKER_REGISTRY-}paymentsapi
+    build:
+      context: .
+      dockerfile: Payments.Api/Dockerfile
+    networks:
+      - bodatero-network  
+    depends_on:
+      postgres:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Serilog__WriteTo__1__Args__Endpoint=http://seq:5341/ingest/otlp/v1/logs
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=bodatero_puzzles;Username=postgres;Password=postgres
+      - RabbitMQ__Host=rabbitmq
+      - MT_LICENSE=Community
+    ports:
+      - "6682:8080"
 
   postgres:
     image: postgres:latest

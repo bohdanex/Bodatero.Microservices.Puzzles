@@ -11,19 +11,11 @@ namespace Ordering.Api.Features.Orders.Create
     {
         public async Task<Guid> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
-            var orderId = Guid.NewGuid();
-
             decimal pricePerUnit = 100.00m;
             decimal totalPrice = pricePerUnit * request.Quantity;
 
-            var order = new Order()
-            {
-                Id = orderId,
-                ProductId = request.ProductId,
-                Quantity = request.Quantity,
-                Status = OrderStatus.Created,
-                TotalPrice = totalPrice, // Suppose we sell the same item with unchanged price. In real scenarios, we should get the price from product service.
-            };
+            var order = new Order(request.ProductId, request.Quantity, totalPrice);
+            var orderId = order.Id;
 
             dbContext.Orders.Add(order);
 

@@ -4,9 +4,9 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using OpenTelemetry.Metrics;
-using Ordering.Api.Extensions;
-using Ordering.Api.Infrastructure;
-using Ordering.Api.Infrastructure.Configurations;
+using Payments.Api.Extensions;
+using Payments.Api.Infrastructure;
+using Payments.Api.Infrastructure.Configurations;
 using Serilog;
 using Serilog.Enrichers.OpenTelemetry;
 
@@ -15,7 +15,7 @@ Log.Logger = new LoggerConfiguration()
     .CreateBootstrapLogger();
 try
 {
-    Log.Information($"Starting the {nameof(Ordering)} web application");
+    Log.Information($"Starting the {nameof(Payments)} web application");
 
     var builder = WebApplication.CreateBuilder(args);
 
@@ -50,7 +50,7 @@ try
 
     builder.Services.Configure<RabbitMqOptions>(builder.Configuration.GetSection(RabbitMqOptions.SectionName));
 
-    builder.Services.AddDbContext<OrderingDBContext>(options =>
+    builder.Services.AddDbContext<PaymentsDBContext>(options =>
         options
             .UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
             .UseSnakeCaseNamingConvention());
@@ -61,7 +61,7 @@ try
 
     builder.Services.AddMassTransit(busConfigurator =>
     {
-        busConfigurator.AddEntityFrameworkOutbox<OrderingDBContext>((o) =>
+        busConfigurator.AddEntityFrameworkOutbox<PaymentsDBContext>((o) =>
         {
             o.UsePostgres();
             o.UseBusOutbox();

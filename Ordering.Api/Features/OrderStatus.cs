@@ -3,8 +3,8 @@
     public enum OrderStatus
     {
         None = 0,
-        Created = 1,
+        Pending = 1,
         Completed = 2,
-        Cancelled = 3
+        Failed = 3
     }
 }
