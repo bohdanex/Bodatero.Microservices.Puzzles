@@ -99,7 +99,7 @@
     "servicesBaseUri": null
   },
   "storage": {
-    "secretKey": "nM+U2WW5Nq9c4ic+ZrOQijMu0F1CYW+iT/0ZwLMLF1U=",
+    "secretKey": "nwlwY3HBCwO08LvfCoDmlsFHwYPeQPrM0Ys+yfg04J4=",
     "flare": {
       "concurrentQueryLimit": null,
       "queryThreadPoolSize": null

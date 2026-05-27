@@ -4,11 +4,19 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Payments.Api.Extensions;
+using Payments.Api.Features.Transactions.Consumers;
 using Payments.Api.Infrastructure;
 using Payments.Api.Infrastructure.Configurations;
 using Serilog;
-using Serilog.Enrichers.OpenTelemetry;
+using SerilogTracing;
+
+using var _ = new ActivityListenerConfiguration()
+    .Instrument.AspNetCoreRequests()
+    .Instrument.SqlClientCommands()
+    .TraceToSharedLogger();
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console(outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz}] [{Level:u3}] {Message:lj}{NewLine}{Exception}")
@@ -23,8 +31,6 @@ try
     {
         config.ReadFrom.Configuration(builder.Configuration);
         config.ReadFrom.Services(services);
-        config.Enrich.WithOpenTelemetrySpanId();
-        config.Enrich.WithOpenTelemetryTraceId();
     });
 
     builder.Logging.Configure(options =>
@@ -61,6 +67,8 @@ try
 
     builder.Services.AddMassTransit(busConfigurator =>
     {
+        busConfigurator.AddConsumer<InventoryReservedConsumer>();
+
         busConfigurator.AddEntityFrameworkOutbox<PaymentsDBContext>((o) =>
         {
             o.UsePostgres();

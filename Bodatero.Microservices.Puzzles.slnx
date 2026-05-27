@@ -1,14 +1,20 @@
 <Solution>
+  <Folder Name="/docs/" />
+  <Folder Name="/docs/adrs/">
+    <File Path="../../../Users/bodat/Downloads/adr-0002-saga-strategy.md" />
+  </Folder>
   <Folder Name="/modules/" />
+  <Folder Name="/modules/inventory/">
+    <Project Path="Inventory.Api/Inventory.Api.csproj" Id="9bd47788-0302-4908-8d88-a3fd2545de7d" />
+    <Project Path="Inventory.Contracts/Inventory.Contracts.csproj" Id="8a9480b3-cb40-4ac6-91a1-ac5befbf8642" />
+  </Folder>
   <Folder Name="/modules/ordering/">
     <Project Path="Ordering.Api/Ordering.Api.csproj" />
     <Project Path="Ordering.Contracts/Ordering.Contracts.csproj" />
   </Folder>
   <Folder Name="/modules/payments/">
     <Project Path="Payments.Api/Payments.Api.csproj" Id="22647db0-f19c-406a-bfec-b3b98eaaf7e1" />
-  </Folder>
-  <Folder Name="/modules/stock/">
-    <Project Path="Stock.Api/Stock.Api.csproj" />
+    <Project Path="Payments.Contracts/Payments.Contracts.csproj" Id="ce29326e-a09e-4141-a98f-1a0962f1ee9e" />
   </Folder>
   <Project Path="docker-compose.dcproj">
     <Build />

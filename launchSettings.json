@@ -5,7 +5,8 @@
       "commandVersion": "1.0",
       "serviceActions": {
         "oredring.api": "StartDebugging",
-        "payments.api": "StartDebugging"
+        "payments.api": "StartDebugging",
+        "inventory.api": "StartDebugging"
       }
     }
   }

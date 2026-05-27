@@ -1,8 +1,7 @@
 ﻿using MassTransit;
 using MediatR;
-using Ordering.Contracts;
+using Ordering.Contracts.Orders;
 using Ordering.Api.Infrastructure;
-using System.Diagnostics;
 
 namespace Ordering.Api.Features.Orders.Create
 {
@@ -19,9 +18,7 @@ namespace Ordering.Api.Features.Orders.Create
 
             dbContext.Orders.Add(order);
 
-            logger.LogInformation("Saving order to database with Id: {OrderId}", orderId);
-
-            await bus.Publish(new OrderCreated(orderId, request.ProductId, request.Quantity, order.TotalPrice), cancellationToken);
+            await bus.Publish(new OrderCreatedEvent(orderId, request.ProductId, request.Quantity, order.TotalPrice), cancellationToken);
             await dbContext.SaveChangesAsync(cancellationToken);
 
             logger.LogInformation("Order created with Id: {OrderId}, ProductId: {ProductId}, Quantity: {Quantity}, TotalPrice: {TotalPrice}", orderId, request.ProductId, request.Quantity, totalPrice);

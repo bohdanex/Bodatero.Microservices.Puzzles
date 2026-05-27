@@ -33,10 +33,14 @@
     <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.15.3" />
     <PackageReference Include="Serilog" Version="4.3.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
+	<PackageReference Include="Serilog.Expressions" Version="5.0.0" />
     <PackageReference Include="Serilog.Enrichers.OpenTelemetry" Version="1.0.1" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="10.0.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
     <PackageReference Include="Serilog.Sinks.OpenTelemetry" Version="4.2.0" />
+	<PackageReference Include="SerilogTracing" Version="2.4.0" />
+	<PackageReference Include="SerilogTracing.Instrumentation.AspNetCore" Version="2.4.0" />
+	<PackageReference Include="SerilogTracing.Instrumentation.SqlClient" Version="2.4.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,6 +49,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ordering.Contracts\Ordering.Contracts.csproj" />
+    <ProjectReference Include="..\Payments.Contracts\Payments.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

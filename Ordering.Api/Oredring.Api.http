@@ -6,7 +6,7 @@ Content-Type: application/json
 
 {
   "quantity": 2,
-  "productId": "e7798e7b-8c85-4383-a23f-115bda4b7809"
+  "productId": "6f3a38a9-dc22-4876-bc3d-bf66fbc26bc1"
 }
 ###
 GET {{Ordering.Api_HostAddress}}/metrics

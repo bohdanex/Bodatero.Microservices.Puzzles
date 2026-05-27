@@ -1,15 +1,16 @@
 using Carter;
 using FluentValidation;
+using Inventory.Api.Extensions;
+using Inventory.Api.Features.Stocks.Consumers;
+using Inventory.Api.Infrastructure;
+using Inventory.Api.Infrastructure.Configurations;
+using Inventory.Api.Infrastructure.Data;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using Ordering.Api.Extensions;
-using Ordering.Api.Features.Orders.Consumers;
-using Ordering.Api.Infrastructure;
-using Ordering.Api.Infrastructure.Configurations;
 using Serilog;
 using SerilogTracing;
 
@@ -23,7 +24,7 @@ Log.Logger = new LoggerConfiguration()
     .CreateBootstrapLogger();
 try
 {
-    Log.Information($"Starting the {nameof(Ordering)} web application");
+    Log.Information($"Starting the {nameof(Inventory)} web application");
 
     var builder = WebApplication.CreateBuilder(args);
 
@@ -53,9 +54,10 @@ try
             options.AddView("request-duration", new ExplicitBucketHistogramConfiguration() { Boundaries = new[] { 0, 0.005, 0.01, 0.025, 0.05, 0.075, 0.1, 0.3, 0.5, 0.7, 1, 1.5, 2, 3, 5 } });
         });
 
+
     builder.Services.Configure<RabbitMqOptions>(builder.Configuration.GetSection(RabbitMqOptions.SectionName));
 
-    builder.Services.AddDbContext<OrderingDBContext>(options =>
+    builder.Services.AddDbContext<InventoryDBContext>(options =>
         options
             .UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
             .UseSnakeCaseNamingConvention());
@@ -66,10 +68,9 @@ try
 
     builder.Services.AddMassTransit(busConfigurator =>
     {
-        busConfigurator.AddConsumer<PaymentProcessedConsumer>();
-        busConfigurator.AddConsumer<OrderFailedConsumer>();
+        busConfigurator.AddConsumer<OrderCreatedConsumer>();
 
-        busConfigurator.AddEntityFrameworkOutbox<OrderingDBContext>((o) =>
+        busConfigurator.AddEntityFrameworkOutbox<InventoryDBContext>((o) =>
         {
             o.UsePostgres();
             o.UseBusOutbox();
@@ -91,14 +92,22 @@ try
     });
 
     var app = builder.Build();
-    app.UseSerilogRequestLogging(options =>
-    {
-        options.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
-    });
+
     app.MapPrometheusScrapingEndpoint();
     app.MapHealthChecks("/health");
+    app.UseSerilogRequestLogging();
     app.ApplyMigrations();
+    #region SeedDevData
+    if (app.Environment.IsDevelopment())
+    {
+        using var scope = app.Services.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<InventoryDBContext>();
+        await DbInitializer.SeedDevDataAsync(dbContext);
+    }
+    #endregion
+
     app.MapCarter();
+
     app.Run();
 }
 catch (Exception ex)
