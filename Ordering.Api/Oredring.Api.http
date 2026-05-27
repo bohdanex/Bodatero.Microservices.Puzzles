@@ -1,0 +1,17 @@
+@Ordering.Api_HostAddress = http://localhost:6582
+
+POST {{Ordering.Api_HostAddress}}/orders
+Accept: application/json
+Content-Type: application/json
+
+{
+  "quantity": 2,
+  "productId": "e7798e7b-8c85-4383-a23f-115bda4b7809"
+}
+###
+GET {{Ordering.Api_HostAddress}}/metrics
+Accept: application/json
+
+###
+GET {{Ordering.Api_HostAddress}}/health
+Accept: application/json

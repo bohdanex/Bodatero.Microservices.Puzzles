@@ -1,0 +1,126 @@
+services:
+  ordering-api:
+    image: ${DOCKER_REGISTRY-}orderingapi
+    build:
+      context: .
+      dockerfile: Ordering.Api/Dockerfile
+    networks:
+      - bodatero-network  
+    depends_on:
+      postgres:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+      seq:
+        condition: service_started
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Serilog__WriteTo__1__Args__Endpoint=http://seq:5341/ingest/otlp/v1/logs
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=bodatero_puzzles;Username=postgres;Password=postgres
+      - RabbitMQ__Host=rabbitmq
+      - MT_LICENSE=Community
+    ports:
+      - "6582:8080"
+
+  postgres:
+    image: postgres:latest
+    networks:
+      - bodatero-network
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: bodatero_puzzles
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - bodatero-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  seq:
+    image: datalust/seq:latest
+    networks:
+      - bodatero-network
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - SEQ_FIRSTRUN_ADMINPASSWORD=admin
+      - SEQ_API_INGESTIONPORT=5341
+    ports:
+      - "5341:80"
+      - "8081:80"
+    volumes:
+      - ./seq-data:/data
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    networks:
+      - bodatero-network
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--path.rootfs=/rootfs'
+    ports:
+      - "9100:9100"
+    pid: "host" # Allows looking at the host's process tree
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    depends_on:
+      - node-exporter
+      - ordering-api
+    networks:
+      - bodatero-network
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    ports:
+      - "9090:9090"
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    networks:
+      - bodatero-network
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/provisioning/dashboards/dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml
+      - ./grafana/provisioning/dashboards/templates:/var/lib/grafana/dashboards
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  bodatero-network:
+    name: bodatero-network
+    driver: bridge
