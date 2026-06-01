@@ -1,0 +1,6 @@
+@Inventory.Api_HostAddress = http://localhost:6782
+
+GET {{Payments.Api_HostAddress}}/metrics
+Accept: application/json
+
+###

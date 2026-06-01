@@ -1,0 +1,6 @@
+@Payments.Api_HostAddress = http://localhost:6682
+
+GET {{Payments.Api_HostAddress}}/metrics
+Accept: application/json
+
+###

@@ -5,16 +5,19 @@
   </Folder>
   <Folder Name="/modules/" />
   <Folder Name="/modules/inventory/">
-    <Project Path="Inventory.Api/Inventory.Api.csproj" Id="9bd47788-0302-4908-8d88-a3fd2545de7d" />
-    <Project Path="Inventory.Contracts/Inventory.Contracts.csproj" Id="8a9480b3-cb40-4ac6-91a1-ac5befbf8642" />
+    <Project Path="modules/inventory/Inventory.Api/Inventory.Api.csproj" />
+    <Project Path="modules/inventory/Inventory.Contracts/Inventory.Contracts.csproj" />
+    <Project Path="modules/inventory/Inventory.IntegrationTests/Inventory.IntegrationTests.csproj" Id="73492f02-1ea7-4922-bb73-f9d641da9e41" />
   </Folder>
   <Folder Name="/modules/ordering/">
-    <Project Path="Ordering.Api/Ordering.Api.csproj" />
-    <Project Path="Ordering.Contracts/Ordering.Contracts.csproj" />
+    <Project Path="modules/ordering/Ordering.Api/Ordering.Api.csproj" />
+    <Project Path="modules/ordering/Ordering.Contracts/Ordering.Contracts.csproj" />
+    <Project Path="modules/ordering/Ordering.IntegrationTests/Ordering.IntegrationTests.csproj" Id="d6505899-b66e-447a-ae5d-f4b166de0af0" />
   </Folder>
   <Folder Name="/modules/payments/">
-    <Project Path="Payments.Api/Payments.Api.csproj" Id="22647db0-f19c-406a-bfec-b3b98eaaf7e1" />
-    <Project Path="Payments.Contracts/Payments.Contracts.csproj" Id="ce29326e-a09e-4141-a98f-1a0962f1ee9e" />
+    <Project Path="modules/payments/Payments.Api/Payments.Api.csproj" />
+    <Project Path="modules/payments/Payments.Contracts/Payments.Contracts.csproj" />
+    <Project Path="modules/payments/Payments.IntegrationTests/Payments.IntegrationTests.csproj" Id="d452e4ea-1ffb-44f2-b598-4d5e03f9a5d7" />
   </Folder>
   <Project Path="docker-compose.dcproj">
     <Build />

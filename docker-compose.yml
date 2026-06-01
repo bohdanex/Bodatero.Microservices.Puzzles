@@ -2,7 +2,7 @@ services:
   ordering-api:
     image: ${DOCKER_REGISTRY-}orderingapi
     build:
-      context: .
+      context: ./modules/ordering/
       dockerfile: Ordering.Api/Dockerfile
     networks:
       - bodatero-network  
@@ -23,7 +23,7 @@ services:
   payments-api:
     image: ${DOCKER_REGISTRY-}paymentsapi
     build:
-      context: .
+      context: ./modules/payments/
       dockerfile: Payments.Api/Dockerfile
     networks:
       - bodatero-network  
@@ -44,8 +44,8 @@ services:
   inventory-api:
     image: ${DOCKER_REGISTRY-}inventoryapi
     build:
-      context: .
-      dockerfile: Inventory.API/Dockerfile
+      context: ./modules/inventory/
+      dockerfile: Inventory.Api/Dockerfile
     networks:
       - bodatero-network  
     depends_on:
