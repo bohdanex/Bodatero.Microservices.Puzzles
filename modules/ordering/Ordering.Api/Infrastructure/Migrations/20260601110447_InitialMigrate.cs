@@ -12,12 +12,8 @@ namespace Ordering.Api.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.EnsureSchema(
-                name: "ordering");
-
             migrationBuilder.CreateTable(
                 name: "inbox_state",
-                schema: "ordering",
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
@@ -41,7 +37,6 @@ namespace Ordering.Api.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "orders",
-                schema: "ordering",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -57,7 +52,6 @@ namespace Ordering.Api.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "outbox_state",
-                schema: "ordering",
                 columns: table => new
                 {
                     outbox_id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -75,7 +69,6 @@ namespace Ordering.Api.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "outbox_message",
-                schema: "ordering",
                 columns: table => new
                 {
                     sequence_number = table.Column<long>(type: "bigint", nullable: false)
@@ -107,58 +100,49 @@ namespace Ordering.Api.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "fk_outbox_message_inbox_state_inbox_message_id_inbox_consumer_",
                         columns: x => new { x.inbox_message_id, x.inbox_consumer_id },
-                        principalSchema: "ordering",
                         principalTable: "inbox_state",
                         principalColumns: new[] { "message_id", "consumer_id" });
                     table.ForeignKey(
                         name: "fk_outbox_message_outbox_state_outbox_id",
                         column: x => x.outbox_id,
-                        principalSchema: "ordering",
                         principalTable: "outbox_state",
                         principalColumn: "outbox_id");
                 });
 
             migrationBuilder.CreateIndex(
                 name: "ix_inbox_state_delivered",
-                schema: "ordering",
                 table: "inbox_state",
                 column: "delivered");
 
             migrationBuilder.CreateIndex(
                 name: "ix_outbox_message_enqueue_time",
-                schema: "ordering",
                 table: "outbox_message",
                 column: "enqueue_time");
 
             migrationBuilder.CreateIndex(
                 name: "ix_outbox_message_expiration_time",
-                schema: "ordering",
                 table: "outbox_message",
                 column: "expiration_time");
 
             migrationBuilder.CreateIndex(
                 name: "ix_outbox_message_inbox_message_id_inbox_consumer_id_sequence_",
-                schema: "ordering",
                 table: "outbox_message",
                 columns: new[] { "inbox_message_id", "inbox_consumer_id", "sequence_number" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_outbox_message_outbox_id_sequence_number",
-                schema: "ordering",
                 table: "outbox_message",
                 columns: new[] { "outbox_id", "sequence_number" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_outbox_state_bus_name_created",
-                schema: "ordering",
                 table: "outbox_state",
                 columns: new[] { "bus_name", "created" });
 
             migrationBuilder.CreateIndex(
                 name: "ix_outbox_state_created",
-                schema: "ordering",
                 table: "outbox_state",
                 column: "created");
         }
@@ -167,20 +151,16 @@ namespace Ordering.Api.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "orders",
-                schema: "ordering");
+                name: "orders");
 
             migrationBuilder.DropTable(
-                name: "outbox_message",
-                schema: "ordering");
+                name: "outbox_message");
 
             migrationBuilder.DropTable(
-                name: "inbox_state",
-                schema: "ordering");
+                name: "inbox_state");
 
             migrationBuilder.DropTable(
-                name: "outbox_state",
-                schema: "ordering");
+                name: "outbox_state");
         }
     }
 }

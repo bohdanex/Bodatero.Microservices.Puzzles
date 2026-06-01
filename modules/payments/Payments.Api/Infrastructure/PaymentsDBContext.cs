@@ -17,12 +17,12 @@ namespace Payments.Api.Infrastructure
         override protected void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.HasDefaultSchema("payments");
             modelBuilder.AddTransactionalOutboxEntities();
 
             modelBuilder.Entity<Transaction>(entity =>
             {
                 entity.HasKey(e => e.Id);
+                entity.HasIndex(e => e.OrderId).IsUnique(); // Ensure one transaction per order
             });
         }
     }

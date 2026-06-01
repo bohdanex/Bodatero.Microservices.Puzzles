@@ -14,7 +14,7 @@ namespace Inventory.IntegrationTests.Infrastructure
     public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetime
     {
         private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder("postgres:latest")
-            .WithDatabase("puzzles_db")
+            .WithDatabase("bodatero_ecommerce_inventory")
             .WithUsername("postgres")
             .WithPassword("postgres")
             .Build();

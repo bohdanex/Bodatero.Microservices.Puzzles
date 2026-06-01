@@ -18,7 +18,7 @@ namespace Payments.IntegrationTests.Infrastructure
         public readonly IPaymentProcessor PaymentProcessor = Substitute.For<IPaymentProcessor>();
 
         private readonly PostgreSqlContainer _dbContainer = new PostgreSqlBuilder("postgres:latest")
-            .WithDatabase("puzzles_db")
+            .WithDatabase("bodatero_ecommerce_payments")
             .WithUsername("postgres")
             .WithPassword("postgres")
             .Build();

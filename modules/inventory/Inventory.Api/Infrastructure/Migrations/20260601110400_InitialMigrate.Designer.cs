@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Inventory.Api.Infrastructure.Migrations
 {
     [DbContext(typeof(InventoryDBContext))]
-    [Migration("20260527093337_InitialMigrate")]
+    [Migration("20260601110400_InitialMigrate")]
     partial class InitialMigrate
     {
         /// <inheritdoc />
@@ -20,7 +20,6 @@ namespace Inventory.Api.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("inventory")
                 .HasAnnotation("ProductVersion", "10.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -40,7 +39,7 @@ namespace Inventory.Api.Infrastructure.Migrations
                     b.HasKey("ProductId")
                         .HasName("pk_stocks");
 
-                    b.ToTable("stocks", "inventory");
+                    b.ToTable("stocks", (string)null);
                 });
 
             modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.InboxState", b =>
@@ -103,7 +102,7 @@ namespace Inventory.Api.Infrastructure.Migrations
                     b.HasIndex("Delivered")
                         .HasDatabaseName("ix_inbox_state_delivered");
 
-                    b.ToTable("inbox_state", "inventory");
+                    b.ToTable("inbox_state", (string)null);
                 });
 
             modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.OutboxMessage", b =>
@@ -220,7 +219,7 @@ namespace Inventory.Api.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("ix_outbox_message_inbox_message_id_inbox_consumer_id_sequence_");
 
-                    b.ToTable("outbox_message", "inventory");
+                    b.ToTable("outbox_message", (string)null);
                 });
 
             modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.OutboxState", b =>
@@ -266,7 +265,7 @@ namespace Inventory.Api.Infrastructure.Migrations
                     b.HasIndex("BusName", "Created")
                         .HasDatabaseName("ix_outbox_state_bus_name_created");
 
-                    b.ToTable("outbox_state", "inventory");
+                    b.ToTable("outbox_state", (string)null);
                 });
 
             modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.OutboxMessage", b =>

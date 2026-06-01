@@ -15,8 +15,6 @@ namespace Ordering.Api.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            modelBuilder.HasDefaultSchema("ordering");
             modelBuilder.AddTransactionalOutboxEntities();
 
             modelBuilder.Entity<Order>(o =>

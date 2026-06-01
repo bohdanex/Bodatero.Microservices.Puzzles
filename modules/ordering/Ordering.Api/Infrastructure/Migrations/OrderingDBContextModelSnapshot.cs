@@ -17,7 +17,6 @@ namespace Ordering.Api.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("ordering")
                 .HasAnnotation("ProductVersion", "10.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -83,7 +82,7 @@ namespace Ordering.Api.Infrastructure.Migrations
                     b.HasIndex("Delivered")
                         .HasDatabaseName("ix_inbox_state_delivered");
 
-                    b.ToTable("inbox_state", "ordering");
+                    b.ToTable("inbox_state", (string)null);
                 });
 
             modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.OutboxMessage", b =>
@@ -200,7 +199,7 @@ namespace Ordering.Api.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("ix_outbox_message_inbox_message_id_inbox_consumer_id_sequence_");
 
-                    b.ToTable("outbox_message", "ordering");
+                    b.ToTable("outbox_message", (string)null);
                 });
 
             modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.OutboxState", b =>
@@ -246,7 +245,7 @@ namespace Ordering.Api.Infrastructure.Migrations
                     b.HasIndex("BusName", "Created")
                         .HasDatabaseName("ix_outbox_state_bus_name_created");
 
-                    b.ToTable("outbox_state", "ordering");
+                    b.ToTable("outbox_state", (string)null);
                 });
 
             modelBuilder.Entity("Ordering.Api.Features.Orders.Order", b =>
@@ -275,7 +274,7 @@ namespace Ordering.Api.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("pk_orders");
 
-                    b.ToTable("orders", "ordering");
+                    b.ToTable("orders", (string)null);
                 });
 
             modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.OutboxMessage", b =>

@@ -39,7 +39,15 @@ namespace Payments.Api.Features.Transactions.Consumers
                 await context.Publish(new OrderFailedEvent(message.OrderId, "Payment declined"), ct);
             }
 
-            await dbContext.SaveChangesAsync(ct);
+            try
+            {
+                await dbContext.SaveChangesAsync(ct);
+            }
+            catch (DbUpdateException ex)
+            {
+                // This error could happen if another consumer has already processed this order and inserted a transaction, violating the unique constraint on OrderId
+                logger.LogError(ex, "An error occurred while saving the transaction for Order {OrderId}", message.OrderId);
+            }
             logger.LogInformation("Transaction for Order {OrderId} processed. Success: {IsSuccess}", message.OrderId, transaction.IsSuccess);
         }
     }

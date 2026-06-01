@@ -17,7 +17,6 @@ namespace Inventory.Api.Infrastructure
         override protected void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.HasDefaultSchema("inventory");
             modelBuilder.AddTransactionalOutboxEntities();
 
             modelBuilder.Entity<Stock>()

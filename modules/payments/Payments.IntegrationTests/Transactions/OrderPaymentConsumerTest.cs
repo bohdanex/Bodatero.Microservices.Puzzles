@@ -20,6 +20,9 @@ namespace Payments.IntegrationTests.Transactions
         {
             _paymentProcessorMock = factory.PaymentProcessor;
             _paymentProcessorMock.ClearSubstitute();
+
+            DbContext.Transactions.RemoveRange(DbContext.Transactions);
+            DbContext.SaveChanges();
         }
 
         [Fact]

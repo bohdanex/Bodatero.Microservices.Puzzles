@@ -12,7 +12,7 @@ using Payments.Api.Infrastructure;
 namespace Payments.Api.Infrastructure.Migrations
 {
     [DbContext(typeof(PaymentsDBContext))]
-    [Migration("20260527065233_InitialMigrate")]
+    [Migration("20260601110422_InitialMigrate")]
     partial class InitialMigrate
     {
         /// <inheritdoc />
@@ -20,7 +20,6 @@ namespace Payments.Api.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("payments")
                 .HasAnnotation("ProductVersion", "10.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -86,7 +85,7 @@ namespace Payments.Api.Infrastructure.Migrations
                     b.HasIndex("Delivered")
                         .HasDatabaseName("ix_inbox_state_delivered");
 
-                    b.ToTable("inbox_state", "payments");
+                    b.ToTable("inbox_state", (string)null);
                 });
 
             modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.OutboxMessage", b =>
@@ -203,7 +202,7 @@ namespace Payments.Api.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("ix_outbox_message_inbox_message_id_inbox_consumer_id_sequence_");
 
-                    b.ToTable("outbox_message", "payments");
+                    b.ToTable("outbox_message", (string)null);
                 });
 
             modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.OutboxState", b =>
@@ -249,7 +248,7 @@ namespace Payments.Api.Infrastructure.Migrations
                     b.HasIndex("BusName", "Created")
                         .HasDatabaseName("ix_outbox_state_bus_name_created");
 
-                    b.ToTable("outbox_state", "payments");
+                    b.ToTable("outbox_state", (string)null);
                 });
 
             modelBuilder.Entity("Payments.Api.Features.Transactions.Transaction", b =>
@@ -278,7 +277,11 @@ namespace Payments.Api.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("pk_transactions");
 
-                    b.ToTable("transactions", "payments");
+                    b.HasIndex("OrderId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_transactions_order_id");
+
+                    b.ToTable("transactions", (string)null);
                 });
 
             modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.OutboxMessage", b =>

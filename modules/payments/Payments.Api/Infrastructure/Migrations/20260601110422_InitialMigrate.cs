@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Inventory.Api.Infrastructure.Migrations
+namespace Payments.Api.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class InitialMigrate : Migration
@@ -12,12 +12,8 @@ namespace Inventory.Api.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.EnsureSchema(
-                name: "inventory");
-
             migrationBuilder.CreateTable(
                 name: "inbox_state",
-                schema: "inventory",
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
@@ -41,7 +37,6 @@ namespace Inventory.Api.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "outbox_state",
-                schema: "inventory",
                 columns: table => new
                 {
                     outbox_id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -58,21 +53,22 @@ namespace Inventory.Api.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "stocks",
-                schema: "inventory",
+                name: "transactions",
                 columns: table => new
                 {
-                    product_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    available_quantity = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    order_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    amount = table.Column<decimal>(type: "numeric", nullable: false),
+                    is_success = table.Column<bool>(type: "boolean", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_stocks", x => x.product_id);
+                    table.PrimaryKey("pk_transactions", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "outbox_message",
-                schema: "inventory",
                 columns: table => new
                 {
                     sequence_number = table.Column<long>(type: "bigint", nullable: false)
@@ -104,80 +100,73 @@ namespace Inventory.Api.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "fk_outbox_message_inbox_state_inbox_message_id_inbox_consumer_",
                         columns: x => new { x.inbox_message_id, x.inbox_consumer_id },
-                        principalSchema: "inventory",
                         principalTable: "inbox_state",
                         principalColumns: new[] { "message_id", "consumer_id" });
                     table.ForeignKey(
                         name: "fk_outbox_message_outbox_state_outbox_id",
                         column: x => x.outbox_id,
-                        principalSchema: "inventory",
                         principalTable: "outbox_state",
                         principalColumn: "outbox_id");
                 });
 
             migrationBuilder.CreateIndex(
                 name: "ix_inbox_state_delivered",
-                schema: "inventory",
                 table: "inbox_state",
                 column: "delivered");
 
             migrationBuilder.CreateIndex(
                 name: "ix_outbox_message_enqueue_time",
-                schema: "inventory",
                 table: "outbox_message",
                 column: "enqueue_time");
 
             migrationBuilder.CreateIndex(
                 name: "ix_outbox_message_expiration_time",
-                schema: "inventory",
                 table: "outbox_message",
                 column: "expiration_time");
 
             migrationBuilder.CreateIndex(
                 name: "ix_outbox_message_inbox_message_id_inbox_consumer_id_sequence_",
-                schema: "inventory",
                 table: "outbox_message",
                 columns: new[] { "inbox_message_id", "inbox_consumer_id", "sequence_number" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_outbox_message_outbox_id_sequence_number",
-                schema: "inventory",
                 table: "outbox_message",
                 columns: new[] { "outbox_id", "sequence_number" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_outbox_state_bus_name_created",
-                schema: "inventory",
                 table: "outbox_state",
                 columns: new[] { "bus_name", "created" });
 
             migrationBuilder.CreateIndex(
                 name: "ix_outbox_state_created",
-                schema: "inventory",
                 table: "outbox_state",
                 column: "created");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_transactions_order_id",
+                table: "transactions",
+                column: "order_id",
+                unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "outbox_message",
-                schema: "inventory");
+                name: "outbox_message");
 
             migrationBuilder.DropTable(
-                name: "stocks",
-                schema: "inventory");
+                name: "transactions");
 
             migrationBuilder.DropTable(
-                name: "inbox_state",
-                schema: "inventory");
+                name: "inbox_state");
 
             migrationBuilder.DropTable(
-                name: "outbox_state",
-                schema: "inventory");
+                name: "outbox_state");
         }
     }
 }
